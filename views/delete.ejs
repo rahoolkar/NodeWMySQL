@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete user</title>
+</head>
+<body>
+    <h1>are you sure you want to delete this?</h1>
+    <form action="/user/<%= node.id %>?_method=DELETE" method="post">
+        <input type="text" name="password" placeholder="enter your password">
+        <button>Yes!</button>
+    </form>
+</body>
+</html>

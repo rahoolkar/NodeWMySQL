@@ -121,3 +121,42 @@ app.post("/user",(req,res)=>{
     }
     
 })
+
+app.get("/user/:id/delete",(req,res)=>{
+    let {id} = req.params;
+    let query = `SELECT * FROM student WHERE id="${id}"`
+    try{
+        connection.query(query,(error,result)=>{
+            if(error)throw error;
+            let node = result[0];
+            res.render("delete.ejs",{node});
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+app.delete("/user/:id",(req,res)=>{
+    let {id} = req.params;
+    let {password:upassword} = req.body;
+    let query = `SELECT * FROM student WHERE id = "${id}"`;
+    try{
+        connection.query(query,(error,result)=>{
+            if(error) throw error;
+            let node = result[0];
+            if(node.password==upassword){
+                let query2 =`DELETE FROM student WHERE id="${id}"`;
+                try{
+                    connection.query(query,(error,result)=>{
+                        if(error)throw error;
+                        res.redirect("/user");
+                    })
+                }catch(error){
+                    console.log(error);
+                }
+            }
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
