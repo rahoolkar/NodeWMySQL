@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mysql = require('mysql2');
+const { v4: uuidv4 } = require('uuid');
 var methodOverride = require('method-override');
 
 let port = 8080;
@@ -96,5 +97,27 @@ app.patch("/user/:id",(req,res)=>{
         console.log(error);
     }
     
+    
+})
+
+app.get("/user/new",(req,res)=>{
+    res.render("new.ejs");
+})
+
+app.post("/user",(req,res)=>{
+    let id = uuidv4();
+    console.log(req.body);
+    let {username,email,password,} = req.body;
+    let arr = [id,username,email,password];
+    let query = "INSERT INTO student (id,username,email,password) VALUES (?,?,?,?)";
+    
+    try{
+        connection.query(query,arr,(error,result)=>{
+            if(error)throw error;
+            res.redirect("/user");
+        })
+    }catch(error){
+        console.log(error);
+    }
     
 })
