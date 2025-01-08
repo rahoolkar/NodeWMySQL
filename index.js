@@ -42,5 +42,7 @@ try{
     console.log(error);
 }
 
+
+
 //ending a connection between node and database
 connection.end();

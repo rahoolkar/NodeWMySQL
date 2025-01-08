@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Username</title>
+</head>
+<body>
+    <h1>Edit username of <%= node.email %></h1>
+    <form action="/user/<%= node.id%>?_method=PATCH" method="post">
+        <input type="text" placeholder="edit your username" name="username">
+        <input type="text" placeholder="enter your password" name="password">
+        <button>Update</button>
+    </form>
+</body>
+</html>
