@@ -6,10 +6,13 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setData } from "../store/userSlice";
+import AuthModel from "./AuthModel";
 
 function Navbar() {
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showUserPopup, setShowUserPopup] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -28,7 +31,7 @@ function Navbar() {
         dispatch(setData(null));
         setShowCreditPopup(false);
         setShowUserPopup(false);
-        navigate("/auth ");
+        navigate("/");
       }
     } catch (error) {
       console.log("Error: " + error.message);
@@ -55,6 +58,10 @@ function Navbar() {
           <div className="relative">
             <button
               onClick={() => {
+                if (!userData) {
+                  setShowAuth(true);
+                  return;
+                }
                 setShowCreditPopup(!showCreditPopup);
                 setShowUserPopup(false);
               }}
@@ -79,6 +86,10 @@ function Navbar() {
           <div className="relative">
             <button
               onClick={() => {
+                if (!userData) {
+                  setShowAuth(true);
+                  return;
+                }
                 setShowUserPopup(!showUserPopup);
                 setShowCreditPopup(false);
               }}
@@ -114,6 +125,14 @@ function Navbar() {
           </div>
         </div>
       </motion.div>
+
+      {showAuth && (
+        <AuthModel
+          onClose={() => {
+            setShowAuth(false);
+          }}
+        ></AuthModel>
+      )}
     </div>
   );
 }
