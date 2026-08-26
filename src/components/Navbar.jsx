@@ -1,0 +1,121 @@
+import { motion } from "motion/react";
+import { useState } from "react";
+import { BsRobot, BsCoin } from "react-icons/bs";
+import { HiOutlineLogout } from "react-icons/hi";
+import { FaUserAstronaut } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setData } from "../store/userSlice";
+
+function Navbar() {
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [showUserPopup, setShowUserPopup] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const userData = useSelector((store) => {
+    return store.user.userData;
+  });
+
+  async function handleLogOut() {
+    try {
+      const response = await fetch("http://localhost:8000/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        dispatch(setData(null));
+        setShowCreditPopup(false);
+        setShowUserPopup(false);
+        navigate("/auth ");
+      }
+    } catch (error) {
+      console.log("Error: " + error.message);
+    }
+  }
+  return (
+    <div className="bg-[#f3f3f3] flex justify-center px-4 pt-6">
+      <motion.div
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="w-full max-w-6xl bg-white rounded-3xl shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative"
+      >
+        <div className="flex items-center gap-3 cursor-pointer">
+          <div className="bg-black text-white p-2 rounded-lg">
+            <BsRobot size={18}></BsRobot>
+          </div>
+          <h1 className="font-semibold hidden md:block text-lg">
+            InterviewIQ.ai
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-8 relative">
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowCreditPopup(!showCreditPopup);
+                setShowUserPopup(false);
+              }}
+              className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-md hover:bg-gray-200 transition"
+            >
+              <BsCoin size={20}>{userData?.credits || 0}</BsCoin>
+            </button>
+
+            {showCreditPopup && (
+              <div className="absolute -right-12.5 mt-3 w-64 bg-white shadow-xl border border-gray-200 rounded-lg p-5 z-50">
+                {" "}
+                <p className="text-sm text-gray-600 mb-4">
+                  Need more credits to continue interviews?
+                </p>
+                <button className="w-full bg-black text-white py-2 rounded-lg text-sm">
+                  Buy more credits
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowUserPopup(!showUserPopup);
+                setShowCreditPopup(false);
+              }}
+              className="w-9 h-9 bg-black text-white rounded-full flex items-center justify-center font-semibold"
+            >
+              {userData ? (
+                userData?.name.slice(0, 1).toUpperCase()
+              ) : (
+                <FaUserAstronaut size={16}></FaUserAstronaut>
+              )}
+            </button>
+            {showUserPopup && (
+              <div className="absolute right-0 mt-3 w-48 bg-white showdow-xl border border-gray-200 rounded-xl p-4 z-50">
+                <p className="text-md text-blue-500 font-medium mb-1">
+                  {userData?.name}
+                </p>
+                <button
+                  onClick={() => {
+                    navigate("/history");
+                  }}
+                  className="w-full text-left text-sm py-2 hover:text-black text-gray-600"
+                >
+                  Interview History
+                </button>
+                <button
+                  onClick={handleLogOut}
+                  className="w-full text-left text-sm py-2 flex items-center gap-2 text-red-500"
+                >
+                  <HiOutlineLogout></HiOutlineLogout> Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export default Navbar;

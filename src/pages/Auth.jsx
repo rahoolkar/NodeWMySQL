@@ -4,13 +4,20 @@ import { motion } from "motion/react";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
+import { setData } from "../store/userSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleGoogleAuth = async () => {
     console.log("button is clicked");
     try {
       const response = await signInWithPopup(auth, provider);
-      console.log(response);
+      console.log(response.user);
+      dispatch(setData(response.user));
+      navigate("/");
     } catch (error) {
       console.error(error.message);
     }
