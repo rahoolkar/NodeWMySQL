@@ -12,14 +12,42 @@ export default function Auth({ isModel = false }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleGoogleAuth = async () => {
-    console.log("button is clicked");
     try {
       const response = await signInWithPopup(auth, provider);
-      console.log(response.user);
-      dispatch(setData(response.user));
+      const { displayName, email } = response.user;
+      const backendResponse = await fetch(
+        "http://localhost:8000/api/auth/google",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            name: displayName,
+            email,
+          }),
+        },
+      );
+
+      if (!backendResponse.ok) {
+        throw new Error("Backend authentication failed");
+      }
+
+      const data = await backendResponse.json();
+
+      dispatch(
+        setData({
+          name: data.user.name,
+          email: data.user.email,
+          photoUrl: data.user.photoUrl,
+          uid: data.user._id,
+        }),
+      );
+
       navigate("/");
     } catch (error) {
-      console.error(error.message);
+      console.error("Google authentication error:", error);
     }
   };
   return (

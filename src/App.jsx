@@ -11,12 +11,16 @@ function App() {
       try {
         const response = await fetch(
           "http://localhost:8000/api/user/getProfile",
+          {
+            method: "GET",
+            credentials: "include",
+          },
         );
 
         if (response.ok) {
           const data = await response.json();
           console.log(data.data);
-          dispatch(setData(response.data));
+          dispatch(setData(data.data));
         } else {
           throw new Error("Something went wrong while fetching the user data");
         }
