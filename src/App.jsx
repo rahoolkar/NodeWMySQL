@@ -19,7 +19,6 @@ function App() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data.data);
           dispatch(setData(data.data));
         } else {
           throw new Error("Something went wrong while fetching the user data");

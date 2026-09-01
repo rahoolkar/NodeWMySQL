@@ -20,7 +20,6 @@ function Navbar() {
     return store.user.userData;
   });
 
-  console.log("userdata ->" + userData);
   async function handleLogOut() {
     try {
       const response = await fetch("http://localhost:8000/api/auth/logout", {
