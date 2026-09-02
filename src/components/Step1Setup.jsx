@@ -34,7 +34,7 @@ function Step1SetUp({ onStart }) {
       formdata.append("resume", resumeFile);
 
       const result = await axios.post(
-        "http://localhost:8000/api/interview/ask",
+        "http://localhost:8000/api/interview/analyse",
         formdata,
         { withCredentials: true },
       );
