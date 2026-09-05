@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { setData } from "../store/userSlice";
 
 function Step1SetUp({ onStart }) {
   const [experience, setExperience] = useState("");
@@ -21,6 +22,12 @@ function Step1SetUp({ onStart }) {
   const [resumeText, setResumeText] = useState("");
   const [analysisDone, setAnalysisDone] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+
+  const userData = useSelector((store) => {
+    return store.user.userData;
+  });
+
+  const dispatch = useDispatch();
 
   async function handleUploadResume() {
     if (!resumeFile || analyzing) {
@@ -49,6 +56,29 @@ function Step1SetUp({ onStart }) {
     } catch (error) {
       console.error(error.message);
       setAnalyzing(false);
+    }
+  }
+
+  async function handleStart() {
+    setLoading(true);
+
+    try {
+      const result = await axios.post(
+        "http://localhost:8000/api/interview/generate",
+        { experience, role, mode, projects, skills, resumeText },
+        { withCredentials: true },
+      );
+
+      console.log(result.data);
+
+      dispatch(setData({ ...userData, tokens: result.data.creditsLeft }));
+
+      setLoading(false);
+
+      onStart(result.data);
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false);
     }
   }
   return (
@@ -227,12 +257,13 @@ function Step1SetUp({ onStart }) {
             )}
 
             <motion.button
+              onClick={handleStart}
               disabled={!role || !experience || loading}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.95 }}
               className="w-full disabled:bg-gray-600 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full text-lg font-semibold transition duration-300 shadow-md"
             >
-              {loading ? "Staring..." : "Start Interview"}
+              {loading ? "Starting..." : "Start Interview"}
             </motion.button>
           </div>
         </motion.div>
