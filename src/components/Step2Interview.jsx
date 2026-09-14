@@ -33,7 +33,6 @@ function Step2Interview({ interviewData, onFinish }) {
       const voices = window.speechSynthesis.getVoices();
       if (!voices.length) return;
 
-      // Try known female voices first
       const femaleVoice = voices.find(
         (v) =>
           v.name.toLowerCase().includes("zira") ||
@@ -47,7 +46,6 @@ function Step2Interview({ interviewData, onFinish }) {
         return;
       }
 
-      // Try known male voices
       const maleVoice = voices.find(
         (v) =>
           v.name.toLowerCase().includes("david") ||
@@ -81,7 +79,7 @@ function Step2Interview({ interviewData, onFinish }) {
 
       window.speechSynthesis.cancel();
 
-      // Add natural pauses after commas and periods
+      
       const humanText = text.replace(/,/g, ", ... ").replace(/\./g, ". ... ");
 
       const utterance = new SpeechSynthesisUtterance(humanText);
@@ -113,12 +111,13 @@ function Step2Interview({ interviewData, onFinish }) {
         }, 300);
       };
 
-      setSubtitle(text);
+      setSubtitle(text);  
 
       window.speechSynthesis.speak(utterance);
     });
   };
 
+  //runintro
   useEffect(() => {
     if (!selectedVoice) {
       return;
@@ -152,6 +151,7 @@ function Step2Interview({ interviewData, onFinish }) {
     runIntro();
   }, [selectedVoice, isIntroPhase, currentIndex]);
 
+  //timer
   useEffect(() => {
     if (isIntroPhase) return;
     if (!currentQuestion) return;
@@ -169,6 +169,7 @@ function Step2Interview({ interviewData, onFinish }) {
     return () => clearInterval(timer);
   }, [isIntroPhase, currentIndex]);
 
+  //reset timer
   useEffect(() => {
     if (!isIntroPhase && currentQuestion) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -176,6 +177,8 @@ function Step2Interview({ interviewData, onFinish }) {
     }
   }, [currentIndex]);
 
+
+  //speech to text
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) return;
 

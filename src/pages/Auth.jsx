@@ -30,6 +30,8 @@ export default function Auth({ isModel = false }) {
         },
       );
 
+      console.log(backendResponse);
+
       if (!backendResponse.ok) {
         throw new Error("Backend authentication failed");
       }

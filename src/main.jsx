@@ -6,6 +6,9 @@ import Auth from "./pages/Auth.jsx";
 import { Provider } from "react-redux";
 import appStore from "./store/appStore.js";
 import InterviewPage from "./pages/InterviewPage.jsx";
+import InterviewHistory from "./pages/InterviewHistory.jsx";
+import Pricing from "./pages/Pricing.jsx";
+import InterviewReport from "./pages/InterviewReport.jsx";
 
 const router = createBrowserRouter([
   {
@@ -13,12 +16,24 @@ const router = createBrowserRouter([
     element: <App></App>,
   },
   {
-    path: "/sign",
+    path: "/login",
     element: <Auth></Auth>,
   },
   {
     path: "/interview",
     element: <InterviewPage></InterviewPage>,
+  },
+  {
+    path: "/history",
+    element: <InterviewHistory></InterviewHistory>,
+  },
+  {
+    path: "/pricing",
+    element: <Pricing></Pricing>,
+  },
+  {
+    path: "/report/:id",
+    element: <InterviewReport></InterviewReport>,
   },
 ]);
 
