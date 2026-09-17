@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Step3Report from "../components/Step3Report";
 
 const InterviewReport = () => {
   const { id } = useParams();
@@ -9,14 +10,16 @@ const InterviewReport = () => {
   useEffect(() => {
     async function fetchReportData() {
       try {
-        const response = await fetch("http://localhost:8000/report/" + id, {
-          credentials: "include",
-        });
+        const response = await fetch(
+          "http://localhost:8000/api/interview/report/" + id,
+          {
+            credentials: "include",
+          },
+        );
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
-          setReport(data.data);
+          setReport(data);
         }
       } catch (error) {
         console.error(error.message);
@@ -34,7 +37,7 @@ const InterviewReport = () => {
     );
   }
 
-  return <div>InterviewReport</div>;
+  return <Step3Report report={report} />;
 };
 
 export default InterviewReport;

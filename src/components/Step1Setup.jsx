@@ -69,8 +69,6 @@ function Step1SetUp({ onStart }) {
         { withCredentials: true },
       );
 
-      console.log(result.data);
-
       dispatch(setData({ ...userData, tokens: result.data.creditsLeft }));
 
       setLoading(false);

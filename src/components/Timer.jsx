@@ -2,7 +2,18 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 function Timer({ timeLeft, totalTime }) {
-  const percentage = (timeLeft / totalTime) * 100;
+  const totalSeconds = parseInt(totalTime, 10);
+
+  if (
+    !Number.isFinite(timeLeft) ||
+    !Number.isFinite(totalSeconds) ||
+    totalSeconds <= 0
+  ) {
+    return null;
+  }
+
+  const percentage = (timeLeft / totalSeconds) * 100;
+
   return (
     <div className="w-20 h-20">
       <CircularProgressbar
@@ -14,7 +25,7 @@ function Timer({ timeLeft, totalTime }) {
           textColor: "#ef4444",
           trailColor: "#e5e7eb",
         })}
-      ></CircularProgressbar>
+      />
     </div>
   );
 }
