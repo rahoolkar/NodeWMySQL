@@ -10,7 +10,7 @@ import axios from "axios";
 import { BsArrowRight } from "react-icons/bs";
 
 function Step2Interview({ interviewData, onFinish }) {
-  const { interviewId, questions, userName } = interviewData;
+  const { interviewId, questions, username } = interviewData;
 
   const [isIntroPhase, setIsIntroPhase] = useState(true);
 
@@ -154,7 +154,7 @@ function Step2Interview({ interviewData, onFinish }) {
         setTimeLeft(0);
 
         await speakText(
-          `Hi ${userName}, it's great to meet you today. I hope you're feeling confident and ready.`,
+          `Hi ${username}, it's great to meet you today. I hope you're feeling confident and ready.`,
         );
 
         await speakText(
@@ -210,17 +210,15 @@ function Step2Interview({ interviewData, onFinish }) {
 
   useEffect(() => {
     if (isIntroPhase) return;
-
     if (!currentQuestion) return;
-
-    // Timer does not run until AI finishes speaking
     if (!timerStarted) return;
+    if (isSubmitting) return;
+    if (feedback) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-
           return 0;
         }
 
@@ -228,10 +226,8 @@ function Step2Interview({ interviewData, onFinish }) {
       });
     }, 1000);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [isIntroPhase, currentIndex, timerStarted]);
+    return () => clearInterval(timer);
+  }, [isIntroPhase, currentQuestion, timerStarted, isSubmitting, feedback]);
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -337,20 +333,23 @@ function Step2Interview({ interviewData, onFinish }) {
 
   useEffect(() => {
     if (isIntroPhase) return;
-
     if (!currentQuestion) return;
-
     if (!timerStarted) return;
-
     if (isSubmitting) return;
-
     if (feedback) return;
 
     if (timeLeft === 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       submitAnswer();
     }
-  }, [timeLeft, timerStarted]);
+  }, [
+    timeLeft,
+    timerStarted,
+    isIntroPhase,
+    currentQuestion,
+    isSubmitting,
+    feedback,
+  ]);
 
   const handleNext = async () => {
     setAnswer("");

@@ -328,7 +328,7 @@ const Step3Report = ({ report }) => {
                           Question {i + 1}
                         </p>
                         <p className="font-semibold text-gray-800 text-sm sm:text-base leading-relaxed">
-                          {q.qustion || "Question not avaliable"}
+                          {q.question || "Question not avaliable"}
                         </p>
                       </div>
 
